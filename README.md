@@ -1,11 +1,7 @@
-React Infinite Scroller
+react-infinite-scroller-improve
 =======================
 
-[![Travis](https://img.shields.io/travis/CassetteRocks/react-infinite-scroller.svg?style=flat-square)](https://travis-ci.org/CassetteRocks/react-infinite-scroller)
-[![npm](https://img.shields.io/npm/dt/react-infinite-scroller.svg?style=flat-square)](https://www.npmjs.com/package/react-infinite-scroller)
-[![React Version](https://img.shields.io/badge/React-%5E0.14.9%20%7C%7C%20%5E15.3.0%20%7C%7C%20%5E16.0.0-blue.svg?style=flat-square)](https://www.npmjs.com/package/react)
-[![npm](https://img.shields.io/npm/v/react-infinite-scroller.svg?style=flat-square)](https://www.npmjs.com/package/react-infinite-scroller)
-[![npm](https://img.shields.io/npm/l/react-infinite-scroller.svg?style=flat-square)](https://github.com/CassetteRocks/react-infinite-scroller/blob/master/LICENSE)
+This is fork of [React-Infinite-Scroller](https://github.com/CassetteRocks/react-infinite-scroller)
 
 Infinitely load content using a React Component. This fork maintains a simple, lightweight infinite scroll package that supports both `window` and scrollable elements.
 
@@ -92,3 +88,4 @@ You can define a custom `parentNode` element to base the scroll calulations on.
 | `threshold`      | `Number`     | `250`      | The distance in pixels before the end of the items that will trigger a call to `loadMore`.|
 | `useCapture`     | `Boolean`     | `false`     | Proxy to the `useCapture` option of the added event listeners.|
 | `useWindow`      | `Boolean`     | `true`     | Add scroll listeners to the window, or else, the component's `parentNode`.|
+| `erro`            | `Component` or `String`     | `null`     |  Error message displayed at the bottom when the interface request fails |

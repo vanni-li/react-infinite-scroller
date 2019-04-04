@@ -1,5 +1,5 @@
 {
-  "name": "react-infinite-scroller-2",
+  "name": "react-infinite-scroller-improve",
   "version": "1.2.4",
   "description": "Infinite scroll component for React, add processing request error",
   "main": "index.js",
@@ -13,7 +13,8 @@
     "test": "nyc npm run spec",
     "spec": "_mocha -R spec ./test/test_helper.js --recursive test/*_test.js",
     "lint": "node_modules/.bin/eslint ./src ./test",
-    "precommit": "lint-staged"
+    "precommit": "lint-staged",
+    "prepublish": "npm run build"
   },
   "lint-staged": {
     "*.{js,jsx}": [
@@ -32,9 +33,9 @@
   "author": "Vanni",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/vanni-li/react-infinite-scroller-2/issues"
+    "url": "https://github.com/vanni-li/react-infinite-scroller-improve/issues"
   },
-  "homepage": "https://github.com/vanni-li/react-infinite-scroller-2#readme",
+  "homepage": "https://github.com/vanni-li/react-infinite-scroller-improve#readme",
   "dependencies": {
     "prop-types": "^15.5.8"
   },

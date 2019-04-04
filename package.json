@@ -1,6 +1,6 @@
 {
   "name": "react-infinite-scroller-improve",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "description": "Infinite scroll component for React, add processing request error",
   "main": "index.js",
   "jsnext:main": "src/InfiniteScroll.js",

@@ -11,16 +11,11 @@ export default class InfiniteScroll extends Component {
     loader: PropTypes.node,
     loadMore: PropTypes.func.isRequired,
     pageStart: PropTypes.number,
-    ref: PropTypes.func,
+    // ref: PropTypes.func,
     getScrollParent: PropTypes.func,
     threshold: PropTypes.number,
     useCapture: PropTypes.bool,
-    useWindow: PropTypes.bool,
-    error: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.node,
-      PropTypes.bool
-    ])
+    useWindow: PropTypes.bool
   };
 
   static defaultProps = {
@@ -28,14 +23,13 @@ export default class InfiniteScroll extends Component {
     hasMore: false,
     initialLoad: true,
     pageStart: 0,
-    ref: null,
+    // ref: null,
     threshold: 250,
     useWindow: true,
     isReverse: false,
     useCapture: false,
     loader: null,
-    getScrollParent: null,
-    error: null
+    getScrollParent: null
   };
 
   constructor(props) {
@@ -53,6 +47,10 @@ export default class InfiniteScroll extends Component {
   }
 
   componentDidUpdate() {
+    this.reBind();
+  }
+
+  reBind() {
     if (this.props.isReverse && this.loadMore) {
       const parentElement = this.getParentElement(this.scrollComponent);
       parentElement.scrollTop =
@@ -61,13 +59,15 @@ export default class InfiniteScroll extends Component {
         this.beforeScrollTop;
       this.loadMore = false;
     }
+    this.attachScrollListener();
+  }
 
-    // 之前是 children 的更新触发重新绑定事件，因为 children 有更新所以列表会加长，离底部距离不会小于 threshold
-    // 现在 error 更新也会触发绑定事件，绑完后因为离底部距离小于 threshold 会触发一次加载
-    // 改成异步绑定后，error 和 children 的更新一起做，避免多加载一次
-    window.setTimeout(() => {
-      this.attachScrollListener();
-    }, 0);
+  rollback() {
+    this.pageLoaded -= 1;
+    // 不跳上去，离底的距离还是小于threshold，触发loadMore，进入死循环
+    // TODO: 这里用 window，如果设置 useWindow = false 会有问题
+    window.scrollTo(0, 0);
+    this.reBind();
   }
 
   componentWillUnmount() {
@@ -157,7 +157,7 @@ export default class InfiniteScroll extends Component {
   attachScrollListener() {
     const parentElement = this.getParentElement(this.scrollComponent);
 
-    if (!this.props.hasMore || !parentElement || this.props.error) {
+    if (!this.props.hasMore || !parentElement) {
       return;
     }
 
@@ -235,13 +235,6 @@ export default class InfiniteScroll extends Component {
     }
   }
 
-  reloadForError = () => {
-    if (typeof this.props.loadMore === 'function') {
-      this.props.loadMore(this.pageLoaded);
-      this.loadMore = true;
-    }
-  };
-
   calculateOffset(el, scrollTop) {
     if (!el) {
       return 0;
@@ -271,31 +264,24 @@ export default class InfiniteScroll extends Component {
       loader,
       loadMore,
       pageStart,
-      ref,
+      // ref,
       threshold,
       useCapture,
       useWindow,
       getScrollParent,
-      error,
       ...props
     } = renderProps;
 
     props.ref = node => {
       this.scrollComponent = node;
-      if (ref) {
-        ref(node);
-      }
+      // if (ref) {
+      //   ref(node);
+      // }
     };
 
     const childrenArray = [children];
     if (hasMore) {
-      if (error) {
-        // TODO: 为绑定事件这里包了一层 div，可能引起样式问题，也可能外层是 <ul>
-        const errorFlag = <div onClick={this.reloadForError}>{error}</div>;
-        isReverse
-          ? childrenArray.unshift(errorFlag)
-          : childrenArray.push(errorFlag);
-      } else if (loader) {
+      if (loader) {
         isReverse ? childrenArray.unshift(loader) : childrenArray.push(loader);
       } else if (this.defaultLoader) {
         isReverse

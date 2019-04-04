@@ -95,6 +95,13 @@ var InfiniteScroll = (function(_Component) {
       )
     );
 
+    _this.reloadForError = function() {
+      if (typeof _this.props.loadMore === 'function') {
+        _this.props.loadMore(_this.pageLoaded);
+        _this.loadMore = true;
+      }
+    };
+
     _this.scrollListener = _this.scrollListener.bind(_this);
     _this.eventListenerOptions = _this.eventListenerOptions.bind(_this);
     _this.mousewheelListener = _this.mousewheelListener.bind(_this);
@@ -113,6 +120,8 @@ var InfiniteScroll = (function(_Component) {
     {
       key: 'componentDidUpdate',
       value: function componentDidUpdate() {
+        var _this2 = this;
+
         if (this.props.isReverse && this.loadMore) {
           var parentElement = this.getParentElement(this.scrollComponent);
           parentElement.scrollTop =
@@ -121,7 +130,9 @@ var InfiniteScroll = (function(_Component) {
             this.beforeScrollTop;
           this.loadMore = false;
         }
-        this.attachScrollListener();
+        window.setTimeout(function() {
+          _this2.attachScrollListener();
+        }, 0);
       }
     },
     {
@@ -230,7 +241,7 @@ var InfiniteScroll = (function(_Component) {
       value: function attachScrollListener() {
         var parentElement = this.getParentElement(this.scrollComponent);
 
-        if (!this.props.hasMore || !parentElement) {
+        if (!this.props.hasMore || !parentElement || this.props.error) {
           return;
         }
 
@@ -341,7 +352,7 @@ var InfiniteScroll = (function(_Component) {
     {
       key: 'render',
       value: function render() {
-        var _this2 = this;
+        var _this3 = this;
 
         var renderProps = this.filterProps(this.props);
 
@@ -358,6 +369,7 @@ var InfiniteScroll = (function(_Component) {
           useCapture = renderProps.useCapture,
           useWindow = renderProps.useWindow,
           getScrollParent = renderProps.getScrollParent,
+          error = renderProps.error,
           props = _objectWithoutProperties(renderProps, [
             'children',
             'element',
@@ -371,11 +383,12 @@ var InfiniteScroll = (function(_Component) {
             'threshold',
             'useCapture',
             'useWindow',
-            'getScrollParent'
+            'getScrollParent',
+            'error'
           ]);
 
         props.ref = function(node) {
-          _this2.scrollComponent = node;
+          _this3.scrollComponent = node;
           if (ref) {
             ref(node);
           }
@@ -383,7 +396,17 @@ var InfiniteScroll = (function(_Component) {
 
         var childrenArray = [children];
         if (hasMore) {
-          if (loader) {
+          if (error) {
+            // TODO: 为绑定事件这里包了一层 div，可能引起样式问题，也可能外层是 <ul>
+            var errorFlag = _react2.default.createElement(
+              'div',
+              { onClick: this.reloadForError },
+              error
+            );
+            isReverse
+              ? childrenArray.unshift(errorFlag)
+              : childrenArray.push(errorFlag);
+          } else if (loader) {
             isReverse
               ? childrenArray.unshift(loader)
               : childrenArray.push(loader);

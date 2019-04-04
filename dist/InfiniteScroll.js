@@ -130,6 +130,10 @@ var InfiniteScroll = (function(_Component) {
             this.beforeScrollTop;
           this.loadMore = false;
         }
+
+        // 之前是 children 的更新触发重新绑定事件，因为 children 有更新所以列表会加长，离底部距离不会小于 threshold
+        // 现在 error 更新也会触发绑定事件，绑完后因为离底部距离小于 threshold 会触发一次加载
+        // 改成异步绑定后，error 和 children 的更新一起做，避免多加载一次
         window.setTimeout(function() {
           _this2.attachScrollListener();
         }, 0);
@@ -437,7 +441,12 @@ InfiniteScroll.propTypes = {
   getScrollParent: _propTypes2.default.func,
   threshold: _propTypes2.default.number,
   useCapture: _propTypes2.default.bool,
-  useWindow: _propTypes2.default.bool
+  useWindow: _propTypes2.default.bool,
+  error: _propTypes2.default.oneOfType([
+    _propTypes2.default.string,
+    _propTypes2.default.node,
+    _propTypes2.default.bool
+  ])
 };
 InfiniteScroll.defaultProps = {
   element: 'div',
@@ -450,7 +459,8 @@ InfiniteScroll.defaultProps = {
   isReverse: false,
   useCapture: false,
   loader: null,
-  getScrollParent: null
+  getScrollParent: null,
+  error: null
 };
 exports.default = InfiniteScroll;
 module.exports = exports['default'];

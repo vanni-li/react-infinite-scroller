@@ -8,6 +8,14 @@ Infinitely load content using a React Component. This fork maintains a simple, l
 - [Demo](https://cassetterocks.github.io/react-infinite-scroller/demo/)
 - [Demo Source](https://github.com/CassetteRocks/react-infinite-scroller/blob/master/docs/src/index.js)
 
+## Update
+之前没有对请求异常情况做处理，当获取列表失败后，会一直停留在 loading 状态，没有机会再尝试加载。  
+现在在 props 添加 `error`，指定加载失败时的文案显示，显示位置和 `loader` 相同。设置 `error` 时，自动加载效果会暂时失效，需要手动点错误文案加载。加载成功后会继续支持滚动加载。
+
+
+The request exception condition has not been processed before. When the data request fails, it will stay in the loading state and there is no chance to try to load again.  
+Now add `error` to props to specify the tips of error when the load fails, and the display position is the same as `loader`. When `error` is set, the autoloading effect will temporarily become invalid, and you need to manually click the tips to load data. infinite scroller load will continue to be supported after successful loading.
+
 ## Installation
 
 ```
@@ -88,4 +96,4 @@ You can define a custom `parentNode` element to base the scroll calulations on.
 | `threshold`      | `Number`     | `250`      | The distance in pixels before the end of the items that will trigger a call to `loadMore`.|
 | `useCapture`     | `Boolean`     | `false`     | Proxy to the `useCapture` option of the added event listeners.|
 | `useWindow`      | `Boolean`     | `true`     | Add scroll listeners to the window, or else, the component's `parentNode`.|
-| `erro`            | `Component` or `String`     | `null`     |  Error message displayed at the bottom when the interface request fails |
+| `error`            | `Component` or `String`     | `null`     |  Error message displayed at the bottom when the interface request fails |
